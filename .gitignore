@@ -1,0 +1,25 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node
+node_modules/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Claude Code temp files
+tmpclaude-*-cwd
+
+# Do NOT ignore .claude/ — it's the framework itself
+# !.claude/
