@@ -104,8 +104,10 @@ your-project/
       qa-tracker.md                  # Persistent work log for QA
       reviewer-tracker.md            # Persistent work log for reviewer
     CHANGELOG.md                     # Append-only log of all completed work
+    hooks/
+      enforce-agent-delegation.py    # PreToolUse hook: blocks orchestrator from editing code
     prompt-contracts.md              # Non-negotiable system behaviors (optional)
-    settings.local.json              # Claude Code settings with team features enabled
+    settings.local.json              # Claude Code settings with team features + hooks
 ```
 
 ---
@@ -211,7 +213,7 @@ Each tracker starts empty with the standard sections:
 - Blocked (with reason and which agent can unblock)
 - Completed (append-only log)
 
-### Step 4: Enable Teams
+### Step 4: Enable Teams and Hooks
 
 Add to your Claude Code settings (`~/.claude/settings.json` or project `.claude/settings.local.json`):
 
@@ -219,9 +221,19 @@ Add to your Claude Code settings (`~/.claude/settings.json` or project `.claude/
 {
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "command": "python .claude/hooks/enforce-agent-delegation.py"
+      }
+    ]
   }
 }
 ```
+
+The hook prevents the orchestrator from editing source code files directly, enforcing the agent delegation pattern. See [Advanced Topics](#hook-based-enforcement) for details.
 
 ---
 
@@ -354,6 +366,27 @@ Maintain a table of fixed bugs in CLAUDE.md with rules for prevention. Every age
 - Use `subagent_type: "Explore"` for read-only research (cheaper than general-purpose)
 - Limit teams to 3-4 agents maximum for practical coordination
 - Use the `run_in_background` parameter for independent agents
+
+### Hook-Based Enforcement
+
+The framework includes a `PreToolUse` hook that **mechanically prevents** the orchestrator from editing source code files. This turns the "orchestrator doesn't write code" principle from a guideline into an enforced constraint.
+
+**How it works:**
+
+1. Claude Code triggers the hook before every `Edit` or `Write` tool call
+2. The hook reads the JSON payload from stdin (contains `tool_name` and `tool_input.file_path`)
+3. If the target file is source code (`.py`, `.js`, `.jsx`, `.ts`, `.tsx`, `.css`, `.html`, etc.), exit code 2 blocks the call
+4. If the target is a `.md` file or `.claude/` config, exit code 0 allows it
+
+**Files:**
+- `.claude/hooks/enforce-agent-delegation.py` -- the hook script
+- `.claude/settings.local.json` -- hook registration under `"hooks"` key
+
+**Customization:**
+- Edit `SOURCE_CODE_EXTENSIONS` in the hook script to match your tech stack
+- Edit `ALLOWED_PATTERNS` to add more exceptions (e.g., allow orchestrator to edit certain config files)
+
+**Why this matters:** Without enforcement, the orchestrator inevitably starts "just quickly fixing" code directly, bypassing agent review and polluting its context window with implementation details. The hook makes the delegation pattern automatic and non-negotiable.
 
 ### When NOT to Use This Framework
 

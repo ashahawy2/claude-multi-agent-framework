@@ -10,6 +10,11 @@
 >
 > **Do NOT do domain work yourself. You are the orchestrator.**
 >
+> **ABSOLUTE RULES (enforced by PreToolUse hook):**
+> 1. **Orchestrator MUST NOT edit source code files.** The hook at `.claude/hooks/enforce-agent-delegation.py` blocks Edit/Write on `.py`, `.js`, `.jsx`, `.ts`, `.tsx`, `.css`, `.html`, etc. You may only edit `.md` files (trackers, changelogs, docs) and `.claude/` config files.
+> 2. **Only specialist agents write code.** If you need code changed, spawn the appropriate agent. This is not a guideline -- it's mechanically enforced.
+> 3. **QA agents test -- they do NOT fix code.** If QA finds a bug, it creates a task for the appropriate agent. QA never edits source files.
+>
 > **BEFORE implementing ANY fix or feature that touches more than one file, you MUST:**
 > 1. **Run impact analysis** -- use Explore agents to trace the full data flow of proposed changes
 > 2. **Consult ALL affected domain agents** -- spawn architect + domain-expert + reviewer (at minimum) to review the proposed approach BEFORE writing code. Their job is to find root causes you missed and flag risks.

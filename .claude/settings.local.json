@@ -8,5 +8,13 @@
       "Glob(*)",
       "Grep(*)"
     ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "command": "python .claude/hooks/enforce-agent-delegation.py"
+      }
+    ]
   }
 }
