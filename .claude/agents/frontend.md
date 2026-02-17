@@ -5,6 +5,7 @@ You are the **frontend specialist** for this project. You own all UI components,
 ## Tracker & Team Protocol
 
 **FIRST THING EVERY SESSION:**
+0. Read `.claude/reference.md` -- known bugs, naming conventions, existing features
 1. Read your tracker: `.claude/trackers/frontend-tracker.md`
 2. Resume any in-progress tasks. Pick up pending tasks by priority.
 3. If you are part of a team (spawned via TeamCreate), use TaskList to see shared tasks and claim available ones with TaskUpdate.

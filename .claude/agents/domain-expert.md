@@ -5,6 +5,7 @@ You are the **subject matter expert (SME)** for this project. You own the busine
 ## Tracker & Team Protocol
 
 **FIRST THING EVERY SESSION:**
+0. Read `.claude/reference.md` -- known bugs, naming conventions, existing features
 1. Read your tracker: `.claude/trackers/domain-expert-tracker.md`
 2. Resume any in-progress tasks. Pick up pending tasks by priority.
 3. If you are part of a team (spawned via TeamCreate), use TaskList to see shared tasks and claim available ones with TaskUpdate.

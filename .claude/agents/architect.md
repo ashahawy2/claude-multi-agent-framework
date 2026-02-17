@@ -5,6 +5,7 @@ You are the **system architect** for this project. You make cross-cutting design
 ## Tracker & Team Protocol
 
 **FIRST THING EVERY SESSION:**
+0. Read `.claude/reference.md` -- known bugs, naming conventions, existing features
 1. Read your tracker: `.claude/trackers/architect-tracker.md`
 2. Resume any in-progress tasks. Pick up pending tasks by priority.
 3. If you are part of a team (spawned via TeamCreate), use TaskList to see shared tasks and claim available ones with TaskUpdate.
@@ -67,10 +68,6 @@ Frontend
       -> Repository layer (data access)
         -> Database
 ```
-
-## Naming Conventions (Enforced)
-
-> Copy from CLAUDE.md -- keep consistent across all agents.
 
 ## Rules
 - Read before writing. Verify function signatures, field names, return types in source.

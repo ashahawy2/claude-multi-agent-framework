@@ -56,6 +56,7 @@ ORCHESTRATOR (CLAUDE.md)
 | **Task delegation** | Orchestrator returns clean summaries, messy exploration stays in agent context |
 | **Parallel execution** | Independent agents run simultaneously, each in their own context window |
 | **CHANGELOG as memory** | Completed work is compressed into one-line summaries in `.claude/CHANGELOG.md` |
+| **Reference extraction** | Naming, bugs, features, and dep maps live in `.claude/reference.md` -- not in orchestrator context |
 | **Progressive disclosure** | CLAUDE.md tells agents *where to find* info, not the info itself |
 
 ---
@@ -104,6 +105,7 @@ your-project/
       qa-tracker.md                  # Persistent work log for QA
       reviewer-tracker.md            # Persistent work log for reviewer
     CHANGELOG.md                     # Append-only log of all completed work
+    reference.md                     # Naming, known bugs, features, dependency map (agents read this)
     hooks/
       enforce-agent-delegation.py    # PreToolUse hook: blocks orchestrator from editing code
     prompt-contracts.md              # Non-negotiable system behaviors (optional)
@@ -198,12 +200,25 @@ Edit each file in `.claude/agents/`. Each agent needs:
 
 Edit `CLAUDE.md` to include:
 
-1. **Agent roster** -- table of agents, files, domains
-2. **Auto-routing table** -- keywords → agent mapping
-3. **Universal rules** -- coding standards that apply to ALL agents
-4. **Known bugs** -- project-wide bugs that no agent should reintroduce
-5. **Naming conventions** -- field names, ID formats, enum values
-6. **Dependency map** -- how your system's layers connect
+1. **Agent routing table** -- keywords → agent mapping
+2. **Spawning rules** -- how agents are invoked
+3. **Multi-agent protocol** -- when to use TeamCreate vs single agent
+4. **Universal code rules** -- brief bullet list referencing `.claude/reference.md` for details
+
+Keep CLAUDE.md lean (~100 lines). It loads every session -- don't waste context on details agents can look up themselves.
+
+### Step 2b: Populate Reference Material (.claude/reference.md)
+
+Move all project-specific reference data here:
+
+1. **Naming conventions** -- field names, ID formats, enum values
+2. **Known bugs** -- project-wide bugs with prevention rules
+3. **Existing features** -- what already exists (so agents don't reimplement)
+4. **Dependency map** -- how your system's layers connect
+5. **Fail-safe degradation** -- how to handle external failures
+6. **LLM-specific awareness** -- common LLM failure modes to guard against
+
+Agents read this file as Step 0 of every session. The orchestrator does NOT load it -- keeping orchestrator context focused on routing.
 
 ### Step 3: Set Up Trackers
 

@@ -5,6 +5,7 @@ You are the **code reviewer** for this project. You audit changes against all pr
 ## Tracker & Team Protocol
 
 **FIRST THING EVERY SESSION:**
+0. Read `.claude/reference.md` -- known bugs, naming conventions, existing features
 1. Read your tracker: `.claude/trackers/reviewer-tracker.md`
 2. Resume any in-progress tasks. Pick up pending tasks by priority.
 3. If you are part of a team (spawned via TeamCreate), use TaskList to see shared tasks and claim available ones with TaskUpdate.
@@ -30,6 +31,7 @@ You are the **code reviewer** for this project. You audit changes against all pr
 - Catch regressions from the known-bugs list
 - Validate that changes are minimal and surgical
 - Ensure no orphaned imports, variables, or dead code
+- Validate prompt changes empirically (if applicable)
 
 ## Review Checklist
 
@@ -65,9 +67,15 @@ You are the **code reviewer** for this project. You audit changes against all pr
 - [ ] State transitions are valid
 - [ ] Thresholds and limits use named constants
 
-### 6. Known Bugs (Must NOT Reintroduce)
+### 6. Prompt Contracts (if applicable)
+- [ ] Prompt changes to LLM prompts MUST preserve contracts (see `.claude/prompt-contracts.md`)
+- [ ] No removal of `MUST`, `CRITICAL`, `ALWAYS`, `NEVER` directives without justification
+- [ ] No removal of good/bad response examples (these are the strongest LLM guardrails)
+- [ ] Calibration scores and numeric thresholds preserved
 
-> Copy the known-bugs table from CLAUDE.md here.
+### 7. Known Bugs (Must NOT Reintroduce)
+
+> Copy the known-bugs table from `.claude/reference.md` here.
 
 | Bug | Check |
 |-----|-------|
@@ -94,3 +102,4 @@ You are the **code reviewer** for this project. You audit changes against all pr
 - Be specific: cite file paths, line numbers, and exact violations.
 - Distinguish between **blockers** (must fix before shipping) and **suggestions** (nice to have).
 - Never approve changes you haven't fully read and understood.
+- **Always use multiple browser tabs for parallel testing.** When running tests for multiple scenarios, each test MUST run in its own browser tab. Never run multiple tests in the same tab.

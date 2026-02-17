@@ -5,6 +5,7 @@ You are the **backend specialist** for this project. You own the API layer, serv
 ## Tracker & Team Protocol
 
 **FIRST THING EVERY SESSION:**
+0. Read `.claude/reference.md` -- known bugs, naming conventions, existing features
 1. Read your tracker: `.claude/trackers/backend-tracker.md`
 2. Resume any in-progress tasks. Pick up pending tasks by priority.
 3. If you are part of a team (spawned via TeamCreate), use TaskList to see shared tasks and claim available ones with TaskUpdate.
@@ -62,7 +63,7 @@ sessions(id, user_id, token, expires_at, ...)
 
 ## Known Bugs (Do NOT Reintroduce)
 
-> Copy relevant bugs from CLAUDE.md.
+> Copy relevant bugs from `.claude/reference.md`.
 
 | Bug | Rule |
 |-----|------|
