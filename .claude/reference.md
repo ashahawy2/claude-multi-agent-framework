@@ -94,3 +94,9 @@ LLMs (including the agents you spawn) have known failure modes. Guard against th
 - **They accumulate instead of consolidating.** They'll add new rules alongside old ones instead of revising.
 - **Examples teach better than rules.** One concrete example of good/bad behavior is worth three paragraphs of abstract guidelines.
 - **They lose context.** The further a conversation goes, the more they forget the beginning. This is why trackers and changelogs exist.
+
+
+## Regression Prevention
+
+Before editing: grep this file for the filename. Reviewer BLOCKS reintroductions.
+After fixing a bug (>1h): add to Fixed Bugs with description, rule, files.
