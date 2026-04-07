@@ -34,6 +34,8 @@ If a fix looks obvious, it STILL goes to the specialist. No exceptions. No "just
 | Business rules, domain logic, validation, prompts, workflows | **domain-expert** | `.claude/agents/domain-expert.md` |
 | Architecture, cross-cutting, schema, data flow | **architect** | `.claude/agents/architect.md` |
 | Code review, audit, regression check | **reviewer** | `.claude/agents/reviewer.md` |
+| Quality audit, artifact review, KI check | **quality-auditor** | `.claude/agents/quality-auditor.md` |
+| Fix audit failures, artifact remediation | **quality-enhancer** | `.claude/agents/quality-enhancer.md` |
 | E2E testing, browser testing, QA | **qa** | `.claude/agents/qa.md` |
 
 **Spawning rules:**
