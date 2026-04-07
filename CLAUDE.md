@@ -42,6 +42,11 @@ If a fix looks obvious, it STILL goes to the specialist. No exceptions. No "just
 - QA agents test and report. They NEVER fix code
 - If a task doesn't fit any agent, ASK THE USER -- don't improvise
 
+
+## Override: #direct-edit
+
+Hook blocks code edits. User types #direct-edit to bypass (you cannot self-authorize).
+
 ## Multi-Agent Protocol
 
 | Scenario | Approach |

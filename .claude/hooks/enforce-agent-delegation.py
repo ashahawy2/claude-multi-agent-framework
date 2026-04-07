@@ -1,121 +1,76 @@
 #!/usr/bin/env python3
-"""
-PreToolUse hook: Prevents the orchestrator from editing source code files.
+"""Agent-identity-aware PreToolUse hook. Exit 0=allow, 2=block."""
 
-The orchestrator's job is routing, coordination, and synthesis -- not writing code.
-This hook enforces that discipline by blocking Edit/Write tool calls on source code
-files. Only specialist agents (spawned via Task tool) should modify code.
+import json, os, re, sys
 
-The orchestrator CAN still edit:
-  - .md files (trackers, changelogs, documentation)
-  - .json config files in .claude/ (settings, etc.)
-
-How it works:
-  - Claude Code invokes this script as a PreToolUse hook for Edit and Write tools
-  - The script receives a JSON payload on stdin with tool_name and tool_input
-  - If the target file is a source code file, the script exits with code 2 (block)
-  - If the target file is allowed (.md, .claude/ config), the script exits with code 0 (allow)
-
-Setup:
-  Add to .claude/settings.local.json under "hooks":
-
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Edit|Write",
-        "command": "python .claude/hooks/enforce-agent-delegation.py"
-      }
-    ]
-  }
-"""
-
-import json
-import os
-import sys
-
-
-# Source code extensions that the orchestrator must NOT edit directly.
-# Customize this list for your project's tech stack.
 SOURCE_CODE_EXTENSIONS = {
-    # Python
-    ".py",
-    # JavaScript / TypeScript
-    ".js", ".jsx", ".ts", ".tsx", ".mjs", ".cjs",
-    # Web
+    ".py", ".js", ".jsx", ".ts", ".tsx", ".mjs", ".cjs",
     ".html", ".css", ".scss", ".sass", ".less",
-    # Backend
     ".java", ".kt", ".go", ".rs", ".rb", ".php",
-    # Mobile
-    ".swift", ".m", ".dart",
-    # Config that affects runtime behavior
-    ".yaml", ".yml", ".toml",
-    # C/C++
-    ".c", ".cpp", ".h", ".hpp",
-    # Shell
-    ".sh", ".bash", ".zsh",
-    # SQL
-    ".sql",
+    ".swift", ".m", ".dart", ".yaml", ".yml", ".toml",
+    ".c", ".cpp", ".h", ".hpp", ".sh", ".bash", ".zsh", ".sql",
 }
 
-# Files/directories the orchestrator IS allowed to edit.
-# These are coordination files, not source code.
-ALLOWED_PATTERNS = [
-    ".md",           # Markdown (trackers, changelogs, docs)
-    ".claude/",      # Claude config directory
-    "CLAUDE.md",     # Orchestrator instructions
-]
+# CUSTOMIZE: Map agents to directories they can edit
+AGENT_DOMAIN_MAP = {
+    "frontend": {"src/components/", "src/styles/", "src/ui/", "src/pages/", "src/views/"},
+    "backend": {"src/api/", "src/services/", "src/models/", "src/database/", "src/middleware/"},
+    "domain-expert": {"src/domain/", "src/rules/", "src/config/", "src/validators/"},
+    "architect": set(),
+    "qa": {"tests/", "e2e/", "cypress/", "__tests__/"},
+}
 
+def is_safe(fp):
+    if not fp: return True
+    n = fp.replace("\\", "/")
+    return n.endswith(".md") or "/.claude/" in n or n.startswith(".claude/")
 
-def is_allowed_file(file_path: str) -> bool:
-    """Check if the orchestrator is allowed to edit this file."""
-    if not file_path:
-        return True  # No file path = allow (tool may not need one)
+def is_source(fp):
+    if not fp: return False
+    _, ext = os.path.splitext(fp)
+    return ext.lower() in SOURCE_CODE_EXTENSIONS
 
-    # Normalize path separators
-    normalized = file_path.replace("\\", "/")
+def detect_agent(conv):
+    pat = re.compile(r"You are the \\*{0,2}(\\w[\\w-]*)\\*{0,2} agent")
+    for msg in conv:
+        if not isinstance(msg, dict): continue
+        c = msg.get("content", "")
+        texts = [c] if isinstance(c, str) else [b.get("text","") if isinstance(b,dict) else str(b) for b in c if b]
+        for t in texts:
+            m = pat.search(t)
+            if m: return m.group(1).lower()
+    return None
 
-    # Allow .md files (trackers, changelogs, documentation)
-    if normalized.endswith(".md"):
-        return True
+def has_override(conv):
+    for msg in conv:
+        if not isinstance(msg, dict) or msg.get("role") != "user": continue
+        c = msg.get("content", "")
+        if isinstance(c, str) and "#direct-edit" in c: return True
+        if isinstance(c, list):
+            for b in c:
+                if isinstance(b, dict) and "#direct-edit" in b.get("text", ""): return True
+    return False
 
-    # Allow files inside .claude/ directory (settings, hooks, etc.)
-    if "/.claude/" in normalized or normalized.startswith(".claude/"):
-        return True
-
-    # Block source code files
-    _, ext = os.path.splitext(normalized)
-    if ext.lower() in SOURCE_CODE_EXTENSIONS:
-        return False
-
-    # Default: allow unknown extensions (be permissive for non-code files)
-    return True
-
+def can_edit(name, fp):
+    if name not in AGENT_DOMAIN_MAP: return True
+    dirs = AGENT_DOMAIN_MAP[name]
+    if not dirs: return False
+    n = fp.replace("\\", "/")
+    return any(d in n for d in dirs)
 
 def main():
-    try:
-        payload = json.load(sys.stdin)
-    except (json.JSONDecodeError, EOFError):
-        # If we can't parse input, allow the operation (fail-open)
-        sys.exit(0)
+    try: payload = json.load(sys.stdin)
+    except: sys.exit(0)
+    fp = payload.get("tool_input", {}).get("file_path", "")
+    if is_safe(fp): sys.exit(0)
+    if "conversation" not in payload: sys.exit(0)
+    if not is_source(fp): sys.exit(0)
+    conv = payload.get("conversation", [])
+    if has_override(conv): sys.exit(0)
+    agent = detect_agent(conv)
+    if agent and can_edit(agent, fp): sys.exit(0)
+    r = f"The {agent} agent cannot edit {fp}." if agent else "Delegate to specialist agent."
+    print(json.dumps({"decision":"block","reason":r+" User: #direct-edit to override."}), file=sys.stderr)
+    sys.exit(2)
 
-    tool_input = payload.get("tool_input", {})
-    file_path = tool_input.get("file_path", "")
-
-    if not is_allowed_file(file_path):
-        # Exit code 2 = block the tool call. Stderr message is shown to Claude.
-        print(
-            f"BLOCKED: Orchestrator cannot edit source code files directly. "
-            f"Delegate to a specialist agent instead.\n"
-            f"  File: {file_path}\n"
-            f"  Rule: The orchestrator routes tasks and synthesizes results. "
-            f"Only specialist agents (frontend, backend, domain-expert, etc.) write code.",
-            file=sys.stderr,
-        )
-        sys.exit(2)
-
-    # Exit code 0 = allow
-    sys.exit(0)
-
-
-if __name__ == "__main__":
-    main()
+if __name__ == "__main__": main()
