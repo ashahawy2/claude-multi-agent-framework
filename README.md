@@ -420,6 +420,9 @@ For projects where AI agents produce artifacts (code, config, prompts, documenta
 4. Lessons feed back into agent definitions and project conventions
 
 This is optional -- add it when your project has enough artifacts to benefit from systematic quality checks.
+### Workflow Skills
+
+Skills are structured entry points that gate development work. Instead of ad-hoc instructions, users invoke `/feature`, `/bug`, or `/review` which enforce spec creation, proper agent routing, and verification. See [`docs/WORKFLOW-SKILLS.md`](docs/WORKFLOW-SKILLS.md) for the full pattern and implementation guide.
 
 ### When NOT to Use This Framework
 
@@ -458,10 +461,13 @@ A: Partially. You can still spawn single agents via the `Task` tool. Teams requi
 | [`docs/CONTEXT-MANAGEMENT.md`](docs/CONTEXT-MANAGEMENT.md) | How to minimize context window usage |
 | [`docs/SETUP-GUIDE.md`](docs/SETUP-GUIDE.md) | Step-by-step adoption guide |
 | [`docs/BEST-PRACTICES.md`](docs/BEST-PRACTICES.md) | Lessons from production use |
+| [`docs/DEV-SYSTEM.md`](docs/DEV-SYSTEM.md) | Spec-driven development process with feature tracking |
+| [`docs/SPEC-TEMPLATE.md`](docs/SPEC-TEMPLATE.md) | Copy-paste spec template for new features |
 | [`docs/DEV-SYSTEM.md`](docs/DEV-SYSTEM.md) | Spec-driven development with feature tracking |
 | [`docs/SPEC-TEMPLATE.md`](docs/SPEC-TEMPLATE.md) | Copy-paste spec template |
 | [`docs/QUALITY-SYSTEM.md`](docs/QUALITY-SYSTEM.md) | Closed-loop quality audit system with KI registry |
 | [`examples/`](examples/) | 4 real-world usage examples (single agent, team, investigation, SaaS customization) |
+| [`docs/WORKFLOW-SKILLS.md`](docs/WORKFLOW-SKILLS.md) | Structured entry points for development work |
 
 ---
 
