@@ -86,6 +86,12 @@ All agents follow these. Full details in `.claude/reference.md`.
 - No mock/fallback responses in API handlers
 - Workaround = BUG. Hung request = failure. Generic content = BROKEN
 
+
+## Feature Tracking
+
+Every non-trivial change gets a feature ID (F-{id}, B-{id}, R-{id}).
+See [docs/DEV-SYSTEM.md](docs/DEV-SYSTEM.md) for full process.
+
 ## Reference Material
 
 All naming conventions, fixed bugs, existing features, and dependency maps live in:

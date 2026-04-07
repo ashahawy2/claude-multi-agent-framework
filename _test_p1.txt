@@ -1,0 +1,7 @@
+var fs = require("fs");
+var Q = String.fromCharCode(39);
+var D = String.fromCharCode(34);
+var B = String.fromCharCode(92);
+var N = String.fromCharCode(10);
+var p = "";
+p += "#!/usr/bin/env python3" + N;

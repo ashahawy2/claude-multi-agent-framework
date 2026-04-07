@@ -440,6 +440,8 @@ A: Partially. You can still spawn single agents via the `Task` tool. Teams requi
 | [`docs/CONTEXT-MANAGEMENT.md`](docs/CONTEXT-MANAGEMENT.md) | How to minimize context window usage |
 | [`docs/SETUP-GUIDE.md`](docs/SETUP-GUIDE.md) | Step-by-step adoption guide |
 | [`docs/BEST-PRACTICES.md`](docs/BEST-PRACTICES.md) | Lessons from production use |
+| [`docs/DEV-SYSTEM.md`](docs/DEV-SYSTEM.md) | Spec-driven development with feature tracking |
+| [`docs/SPEC-TEMPLATE.md`](docs/SPEC-TEMPLATE.md) | Copy-paste spec template |
 | [`examples/`](examples/) | 4 real-world usage examples (single agent, team, investigation, SaaS customization) |
 
 ---
