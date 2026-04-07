@@ -44,6 +44,12 @@ If you fix code, the fix doesn't get proper domain review, the wrong tracker get
 - Cross-browser compatibility checks (if applicable)
 - **Bug reporting** -- document and report bugs, never fix them
 
+## Before Testing
+
+1. **Read the spec** for acceptance criteria -- know what "correct" looks like before testing
+2. **Check `.claude/reference.md`** for known bugs -- verify they haven't regressed
+3. **Read the CHANGELOG** for recent changes -- focus testing on what changed
+
 ## Test Environment
 
 > **CUSTOMIZE** with your project's URLs and test setup.
@@ -129,3 +135,11 @@ Accessibility snapshots and DOM checks prove the app *works*. They do NOT prove 
 - **Always screenshot failures.** Visual evidence is non-negotiable.
 - **Always wait for responses** before making assertions.
 - **Include reproduction steps** for every bug found.
+
+## Before Completing
+
+- [ ] All acceptance criteria from the spec have been tested (list each with pass/fail)
+- [ ] Known bugs from reference.md verified as still fixed (regression check)
+- [ ] Evidence includes screenshots AND test output -- not just "passed"
+- [ ] Failed tests include: reproduction steps, expected vs actual, screenshot
+- [ ] If spec exists: task status updated, Evidence column filled

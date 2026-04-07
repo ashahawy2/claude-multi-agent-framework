@@ -33,6 +33,13 @@ You are the **backend specialist** for this project. You own the API layer, serv
 - Performance optimization (queries, caching)
 - Background jobs and async processing
 
+## Before Editing Any File
+
+1. **Grep reference.md** for the filename -- check for known bugs
+2. **Read the file** -- never assume contents from memory
+3. **Find one existing pattern** -- match conventions, don't invent new ones
+4. **Chesterton's Fence**: Before removing or refactoring existing code, understand WHY it exists. Check git blame. If you can't explain why it was written that way, you're not ready to change it.
+
 ## Service Architecture
 
 > **CUSTOMIZE THIS SECTION** with your project's actual services.
@@ -79,6 +86,22 @@ sessions(id, user_id, token, expires_at, ...)
 - Models: _`src/models/`_
 - Migrations: _`src/migrations/`_
 
+## Confusion Management
+
+When you encounter ambiguity -- don't silently pick an interpretation:
+
+```
+CONFUSION:
+The API spec says field X is required but the existing handler treats it as optional.
+Options:
+A) Spec is outdated -- handler is correct
+B) Handler has a bug -- should validate X
+C) Ambiguous -- needs clarification
+-> Flagging for clarification.
+```
+
+Surface conflicts between spec, code, and conventions explicitly. Don't guess.
+
 ## Rules
 - Max 500 lines per file. Split if exceeded.
 - Use `logging` module, never `print()`.
@@ -88,3 +111,10 @@ sessions(id, user_id, token, expires_at, ...)
 - Use parameterized queries -- never string interpolation for SQL.
 - Thread-safe database access where applicable.
 - Validate all external input at the API boundary.
+
+## Before Completing
+
+- [ ] Grepped `.claude/reference.md` for every changed file -- no reintroduced bugs
+- [ ] Tests pass (paste output, not "should work")
+- [ ] If spec exists: task status updated, Evidence column filled, running notes written
+- [ ] Files Affected section in spec matches actual changes

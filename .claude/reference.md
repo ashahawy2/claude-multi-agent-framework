@@ -100,3 +100,47 @@ LLMs (including the agents you spawn) have known failure modes. Guard against th
 
 Before editing: grep this file for the filename. Reviewer BLOCKS reintroductions.
 After fixing a bug (>1h): add to Fixed Bugs with description, rule, files.
+## Context Hierarchy -- What to Read When
+
+Load context deliberately -- too little and you hallucinate, too much and you lose focus.
+
+| Level | What | When to read |
+|-------|------|-------------|
+| 1. **Rules** | `CLAUDE.md`, this file | Every session (auto-loaded) |
+| 2. **Spec** | `docs/plans/F-{id}-spec.md` | When starting a task -- read ONLY the relevant spec |
+| 3. **Source** | Files you'll modify + one existing pattern example | Before editing -- grep reference.md first |
+| 4. **Errors** | Test output, build errors | When something fails -- paste the specific error |
+| 5. **History** | Trackers, CHANGELOG | When you need context on past decisions |
+
+**Anti-patterns:**
+- Loading all specs at once (context flooding)
+- Editing without reading the file first (context starvation)
+- Using stale conversation context instead of re-reading files (context drift)
+
+## When You're Confused -- Surface It, Don't Guess
+
+When context conflicts or requirements are incomplete, don't silently pick one interpretation:
+
+```
+CONFUSION:
+The spec says X but the existing code does Y.
+Options:
+A) Spec is stale -- code is correct
+B) Code deviates -- needs correction
+C) Ambiguous -- needs clarification
+-> Flagging for clarification.
+```
+
+If the spec doesn't cover a case you need to implement: check existing code for precedent. If no precedent, stop and ask. Don't invent requirements.
+
+## Complexity Signals -- Fix on Sight
+
+| Signal | Fix |
+|--------|-----|
+| Deep nesting (3+ levels) | Extract guard clauses or helper functions |
+| Long functions (50+ lines) | Split into focused functions |
+| Nested ternaries | Replace with if/else or lookup |
+| Generic names (`data`, `result`, `temp`) | Rename to describe content |
+| Same logic in 2+ places | Extract to shared function |
+| Dead code (unreachable, commented-out) | Remove -- git has history |
+| Wrapper that adds no value | Inline it |
