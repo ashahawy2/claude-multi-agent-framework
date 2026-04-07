@@ -45,6 +45,23 @@ Grep `.claude/reference.md` for every changed file.
 ## Confusion Management
 
 When ambiguous, surface it. Don't guess.
+| Bug | Check |
+|-----|-------|
+| _Example_ | _What to verify_ |
+
+### 8. Chesterton's Fence
+- [ ] If code was removed or significantly refactored, does the change demonstrate understanding of WHY the original existed?
+- [ ] Check git blame or CHANGELOG for context on the removed code
+- [ ] Removal without demonstrated understanding = BLOCKED
+
+## How to Review
+
+1. **Read the changed files** -- understand what was modified
+2. **Run through the checklist** -- flag any violations
+3. **Trace the data flow** -- verify types match at boundaries
+4. **Check for orphans** -- imports/variables made unused by changes
+5. **Grep for related code** -- ensure consistency across all usages
+6. **Report findings** -- list issues with file:line references
 
 ## Verdicts
 
