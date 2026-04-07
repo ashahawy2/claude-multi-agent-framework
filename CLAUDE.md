@@ -89,9 +89,19 @@ All agents follow these. Full details in `.claude/reference.md`.
 
 ## Feature Tracking
 
-Every non-trivial change gets a feature ID (F-{id}, B-{id}, R-{id}).
-See [docs/DEV-SYSTEM.md](docs/DEV-SYSTEM.md) for full process.
+Every non-trivial change gets a feature ID from the registry:
+- `F-{id}` — new feature or enhancement
+- `B-{id}` — bug fix
+- `R-{id}` — refactor
 
+**Process:**
+1. Check `docs/FEATURES.md` — does an ID exist for this work?
+2. If not, create an entry before starting
+3. For medium+ changes, create a spec: `docs/plans/F-{id}-spec.md` (template: `docs/SPEC-TEMPLATE.md`)
+4. Include the ID in commit messages
+5. Update the spec when tasks complete — fill Evidence column
+
+See [`docs/DEV-SYSTEM.md`](docs/DEV-SYSTEM.md) for the full development process.
 ## Reference Material
 
 All naming conventions, fixed bugs, existing features, and dependency maps live in:
