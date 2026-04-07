@@ -60,6 +60,21 @@ Hook blocks code edits. User types #direct-edit to bypass (you cannot self-autho
 
 **Escalation:** If agents disagree after 2 rounds, present both positions to the user with trade-offs. Don't loop.
 
+## Development Skills (Optional)
+
+For structured development, use workflow skills that enforce the right process:
+
+| Intent | Skill | What it does |
+|--------|-------|-------------|
+| New feature | `/feature` | Spec → register → break down → execute |
+| Bug fix | `/bug` | Minimal spec → diagnose → fix → prevent |
+| Code review | `/review` | Reviewer agent against spec + changes |
+| Check progress | `/status` | Dashboard of in-progress work |
+
+Skills are optional but recommended. They prevent shortcuts that lead to untracked, unreviewed changes. See [`docs/WORKFLOW-SKILLS.md`](docs/WORKFLOW-SKILLS.md).
+
+**Anti-rationalization:** "This is simple, I'll skip the skill" is the signal TO use the skill. Simple changes still need tracking and evidence.
+
 ## Multi-File Changes -- MANDATORY PROCESS
 
 Before implementing ANY change touching 2+ files:
