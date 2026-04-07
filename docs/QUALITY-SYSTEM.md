@@ -31,6 +31,7 @@ The loop is continuous: every audit may discover new issues, which get registere
 Location: `.claude/known-issues.md`
 
 Every quality problem discovered through audits, testing, or production use gets a KI entry. This is the project immune system -- it prevents the same class of bug from recurring.
+Every quality problem discovered through audits, testing, or production use gets a KI entry. This is the project's immune system -- it prevents the same class of bug from recurring.
 
 Each entry contains:
 
@@ -49,6 +50,7 @@ Each entry contains:
 - Before modifying any artifact, check if KI entries reference it
 - The auditor agent cross-references every audit against the full KI registry
 - Resolved entries stay in the registry -- they document the project history
+- Resolved entries stay in the registry -- they document the project's history
 
 ---
 
@@ -81,6 +83,7 @@ Cross-reference against the KI registry. Is every relevant known issue addressed
 #### 4. Convention Compliance
 
 Do naming conventions, code style, patterns, and project standards match what is defined in `.claude/reference.md` and project configuration?
+Do naming conventions, code style, patterns, and project standards match what's defined in `.claude/reference.md` and project configuration?
 
 **Examples:** Inconsistent naming (camelCase vs snake_case). Non-standard file organization. Missing standard headers or comments.
 
@@ -114,6 +117,7 @@ PASSED:
 
 FAILED:
 - {dimension}: {what failed, where, severity}
+- {dimension}: {what's wrong, where, severity}
 
 WARNINGS:
 - {dimension}: {concern, not blocking}
@@ -134,6 +138,8 @@ The enhancer receives an audit report and makes targeted fixes. It follows stric
 1. **Read first.** Understand the full artifact before making any change
 2. **Fix only what the audit flagged.** No unrelated improvements
 3. **Preserve existing patterns.** Match the existing conventions of the artifact
+2. **Fix only what the audit flagged.** No "while I'm here" improvements
+3. **Preserve existing patterns.** Match the artifact's existing conventions
 4. **Maximum 2 cycles.** If the artifact still fails audit after 2 fix rounds, escalate to the user
 5. **Write positive patterns.** Describe what TO do, not just what NOT to do
 6. **Document every change.** Before/after, referencing which audit finding each change addresses
@@ -185,6 +191,7 @@ When a new KI entry is added, check whether existing artifacts are affected. A n
 ### Coverage Checks
 
 Track which artifacts have been audited and when. Flag artifacts that have not been audited within the expected cadence. This prevents "forgotten corners" where quality silently degrades.
+Track which artifacts have been audited and when. Flag artifacts that haven't been audited within the expected cadence. This prevents "forgotten corners" where quality silently degrades.
 
 ---
 
@@ -210,5 +217,6 @@ This allows the same audit framework to serve different projects with different 
 3. Run an initial audit of your most critical artifacts to establish a baseline
 4. Add KI entries for any issues found
 5. Set up a cadence for regular audits based on your project change velocity
+5. Set up a cadence for regular audits based on your project's change velocity
 
 The quality system is optional and additive -- it layers on top of the existing agent framework without requiring changes to how other agents work.

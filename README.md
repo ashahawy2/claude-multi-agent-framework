@@ -46,6 +46,8 @@ ORCHESTRATOR (CLAUDE.md)
 | **domain-expert** | Business logic, domain rules, prompt engineering | Yes (prompts/config) | Subject matter expertise |
 | **qa** | E2E testing, browser automation, regression testing | No (tests only) | Finds bugs, not proves success |
 | **reviewer** | Code review, constraint checking, regression prevention | No (read-only) | Catches what others miss |
+| **quality-auditor** | Artifact quality, KI registry, convention checking | No (read-only) | Finds quality drift |
+| **quality-enhancer** | Artifact remediation, audit fix cycles | Yes (targeted fixes) | Fixes what auditor finds |
 
 ### How Context Is Minimized
 
@@ -97,6 +99,8 @@ your-project/
       domain-expert.md               # Domain/SME specialist agent definition
       qa.md                          # QA and testing agent definition
       reviewer.md                    # Code reviewer agent definition
+      quality-auditor.md             # Quality auditor agent definition
+      quality-enhancer.md            # Quality enhancer agent definition
     trackers/
       architect-tracker.md           # Persistent work log for architect
       frontend-tracker.md            # Persistent work log for frontend
@@ -104,8 +108,11 @@ your-project/
       domain-expert-tracker.md       # Persistent work log for domain expert
       qa-tracker.md                  # Persistent work log for QA
       reviewer-tracker.md            # Persistent work log for reviewer
+      quality-auditor-tracker.md      # Persistent work log for quality auditor
+      quality-enhancer-tracker.md     # Persistent work log for quality enhancer
     CHANGELOG.md                     # Append-only log of all completed work
     reference.md                     # Naming, known bugs, features, dependency map (agents read this)
+    known-issues.md                  # Known Issues (KI) registry for quality tracking
     hooks/
       enforce-agent-delegation.py    # PreToolUse hook: blocks orchestrator from editing code
     prompt-contracts.md              # Non-negotiable system behaviors (optional)
@@ -403,6 +410,17 @@ The framework includes a `PreToolUse` hook that **mechanically prevents** the or
 
 **Why this matters:** Without enforcement, the orchestrator inevitably starts "just quickly fixing" code directly, bypassing agent review and polluting its context window with implementation details. The hook makes the delegation pattern automatic and non-negotiable.
 
+### Quality Audit System
+
+For projects where AI agents produce artifacts (code, config, prompts, documentation), the quality system provides a closed-loop audit process:
+
+1. **Auditor agent** checks artifacts against 7 dimensions + known issues registry
+2. **Enhancement agent** fixes audit failures (max 2 cycles, then escalates)
+3. **Known Issues registry** (`.claude/known-issues.md`) tracks discovered problems
+4. Lessons feed back into agent definitions and project conventions
+
+This is optional -- add it when your project has enough artifacts to benefit from systematic quality checks.
+
 ### When NOT to Use This Framework
 
 - Solo developer on a small project (< 10 files)
@@ -442,6 +460,7 @@ A: Partially. You can still spawn single agents via the `Task` tool. Teams requi
 | [`docs/BEST-PRACTICES.md`](docs/BEST-PRACTICES.md) | Lessons from production use |
 | [`docs/DEV-SYSTEM.md`](docs/DEV-SYSTEM.md) | Spec-driven development with feature tracking |
 | [`docs/SPEC-TEMPLATE.md`](docs/SPEC-TEMPLATE.md) | Copy-paste spec template |
+| [`docs/QUALITY-SYSTEM.md`](docs/QUALITY-SYSTEM.md) | Closed-loop quality audit system with KI registry |
 | [`examples/`](examples/) | 4 real-world usage examples (single agent, team, investigation, SaaS customization) |
 
 ---
