@@ -92,6 +92,11 @@ All agents follow these. Full details in `.claude/reference.md`.
 Every non-trivial change gets a feature ID (F-{id}, B-{id}, R-{id}).
 See [docs/DEV-SYSTEM.md](docs/DEV-SYSTEM.md) for full process.
 
+## Review Gate -- MANDATORY
+
+Before committing source code, spawn **reviewer**.
+Skip: #skip-review (trivial only).
+
 ## Reference Material
 
 All naming conventions, fixed bugs, existing features, and dependency maps live in:
